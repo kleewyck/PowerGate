@@ -1,0 +1,59 @@
+author: mongoose-os
+description: An empty app that does nothing
+### version: 1.0
+arch: esp8266
+
+libs_version: ${mos_version}
+modules_version: ${mos_version}
+mongoose_os_version: ${mos_version}
+
+# Optional. List of tags for online search.
+tags:
+  - c
+
+# List of files / directories with C sources. No slashes at the end of dir names.
+sources:
+  - src
+
+# List of dirs. Files from these dirs will be copied to the device filesystem
+filesystem:
+  - fs
+  - ${mjs_path}/mjs/lib/api_*.js
+  - ${mongoose_os_path}/fw/mjs_api/api_*.js
+  - ${mongoose_os_path}/fw/platforms/${arch}/mjs_api/api_*.js
+modules:
+  - origin: https://github.com/cesanta/mjs
+# Custom configuration entries, settable via "device configuration"
+config_schema:
+  - ["lvd_app", "o", {title: "My app custom settings"}]
+  - ["lvd_app.app_name", "s", "Ham Radio 360 Low voltage Disconnect", {title: "Title Header"}]
+  - ["lvd_app.low_voltage_disconnect","i",1100,{title: "At what low voltage do we turn off the output"}]
+  - ["lvd_app.low_voltage_reconnect","i",1150,{title: "At what low voltage do we turn back on the output"}]
+  - ["lvd_app.high_voltage_disconnect","i",1550,{title: "At what High voltage do we turn off the output"}]
+  - ["lvd_app.high_voltage_reconnect","i",1500,{title: "At what High voltage do we turn back on the output"}]
+  - ["lvd_app.high_current_disconnect","i",2000,{title: "At what High Current do we turn off the output"}]
+  - ["lvd_app.voltage_delay","i",10000,{title: "How long do we wait at high voltage before turnning off output"}]
+  - ["lvd_app.current_delay","i",500,{title: "How long do we wait at High Current before turnning off output"}]
+  - ["blynk", "o", {"title": "Blynk settings"}]
+  - ["blynk.enable", "b", true, {"title": "Enable Blynk"}]
+  - ["blynk.server", "s", "blynk-cloud.com:8442", {"title": "Server address"}]
+  - ["blynk.auth", "s", "811ae8e92cd441f8a03536505c94419e", {"title": "Auth token"}]
+
+#  - ["my_app", "o", {title: "My app custom settings"}]
+#  - ["my_app.bool_value", "b", false, {title: "Some boolean value"}]
+#  - ["my_app.string_value", "s", "", {title: "Some string value"}]
+#  - ["my_app.int_value", "i", 123, {title: "Some integer value"}]
+
+# List of libraries used by this app, in order of initialisation
+libs:
+  - origin: https://github.com/mongoose-os-libs/wifi
+  - origin: https://github.com/mongoose-os-libs/http-server
+  - origin: https://github.com/mongoose-os-libs/aws
+  - origin: https://github.com/mongoose-os-libs/rpc-mqtt
+  - origin: https://github.com/mongoose-os-libs/rpc-service-config
+  - origin: https://github.com/mongoose-os-libs/rpc-service-fs
+  - origin: https://github.com/mongoose-os-libs/rpc-uart
+
+
+# Used by the mos tool to catch mos binaries incompatible with this file format
+skeleton_version: 2017-05-18

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Ham Radio 360 LVD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script type="text/javascript" src="jquery-1.11.3.min.js"></script>
+  <script type="text/javascript" src="main.js"></script>
+</head>
+
+<body>
+  <div class="content">
+    <img src="hr360-logo.jpg" style="float:right; height: 50px; border-radius: 3px;">
+    <h1>HamRadio 360 Low Voltage Disconnect</h1>
+
+    <p>
+      This page allows one to configure access point for the device to point to.
+    </p>
+
+    <form method="POST" action="/save">
+      <fieldset>
+        <legend>Device Status</legend>
+        <div class="datagrid">
+          <tbody>
+            <table>
+              <tr>
+                <td><label>Battery Voltage </label></td>
+                <td>
+                  <table border=none>
+                    <tr>
+                      <td align=right width=30px><b><span id="bvolt"> </span></td><td>Volts</b></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr class="alt">
+                <td><label>Power Suppy Voltage </label></td>
+                <td>
+                  <table border=none>
+                    <tr>
+                      <td align=right width=30px><b><span id="psvolt"> </span></td><td>Volts</b></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td><label>Output Voltage </label></td>
+                <td>
+                  <table border=none>
+                    <tr>
+                      <td align=right width=30px><b><span id="outvolt"> </span></td><td>Volts</b></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr class="alt">
+                <td><label>Output Current</label></td>
+                <td>
+                  <table border=none>
+                    <tr>
+                      <td align=right width=30px><b><span id="current"> </span></td><td>Amps</b></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td><label>Relay State</label></td>
+                <td><b><span id="relayStatus"> </span></b></td>
+              </tr>
+            </table>
+          </tbody>
+          <div>
+            <button type="submit" value="on-off">On/Off</button>
+          </div>
+        </div>
+
+      </fieldset>
+    </form>
+
+    <h1>Connection Status</h1>
+    <label>CPU usage: </label> <b><span id="cpu_usage">&nbsp;</span></b>
+    <label><br>SSID Name: </label> <b><span id="ssid_name"> </span></b>
+    <label><br>IP Address: </label> <b><span id="ip_addr"> </span></b>
+    <label><br>Date: <b><span id="date"> </span></b>
+
+    <script>
+        function updateClock() {
+	  document.getElementById("date").innerHTML = Date()
+	}
+    setInterval(updateClock, 1000);
+    </script>
+  </div>
+</body>
+</html>
