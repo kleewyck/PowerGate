@@ -2,6 +2,8 @@
 
 float out_cur_readings[20];
 uint8_t ocr_idx = 0;
+
+
 void relayOn(dpt_system_t *systemValues){
 	LOG(LL_INFO,("Relay on"));
 	mgos_gpio_write(GPIO_RELAY_SET, 1);

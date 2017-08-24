@@ -15,8 +15,7 @@ mos console
 
 ## Overview
 
-This is an empty app, serves as a skeleton for building Mongoose OS
-apps from scratch.
+This is an application to control the HamRadio360 Powergate. 
 
 ## How to install this app
 
