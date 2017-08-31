@@ -11,7 +11,7 @@ struct sys_config *device_cfg;
 int count = 0;
 char *msg = "This is a message";
 dpt_system_t systemValues;
-// Forward Decliations for functions 
+// Forward Decliations for functions
 static void buttonCallBackHandler(int pin,void *arg);
 
 static struct device_settings s_settings = {"ssid", "password"};
@@ -21,16 +21,16 @@ static struct device_settings s_settings = {"ssid", "password"};
 
 
 /*
- * handle_get_cpu_usage. This reports CPU usage, and also provides connection status
+ *handle_get_lvd_data. This reports CPU usage, and also provides connection status
  *
  */
-static void handle_get_cpu_usage(struct mg_connection *nc, dpt_system_t *systemValues) {
+static void handle_get_lvd_data(struct mg_connection *nc, dpt_system_t *systemValues) {
 
         struct mbuf fb;
         struct json_out fout = JSON_OUT_MBUF(&fb);
         mbuf_init(&fb, 512);
 
-
+        printf("Entering get_cpu_usage\n\r");
         //json_printf(&fout, STATUS_FMT, systemValues->cpu_usage, mgos_wifi_get_connected_ssid(), mgos_wifi_get_status_str());
 				json_printf(&fout,JSON_STATUS_FMT,systemValues->cpu_usage,
 					                            mgos_wifi_get_connected_ssid(),
@@ -55,6 +55,7 @@ static void handle_get_cpu_usage(struct mg_connection *nc, dpt_system_t *systemV
         // LOG(LL_INFO, ("%s\n", f.p));
 
         mbuf_free(&fb);
+        printf("Leaving get_cpu_usage\n\r");
 }
 /*
  * SSI handler for SSI events...
@@ -81,8 +82,8 @@ static void http_get_ev_handler(struct mg_connection *nc, int ev, void *ev_data,
 
   switch (ev) {
     case MG_EV_HTTP_REQUEST:
-      if (mg_vcmp(&hm->uri, "/get_cpu_usage") == 0) {
-        handle_get_cpu_usage(nc,user_data);
+      if (mg_vcmp(&hm->uri, "/get_lvd_data") == 0) {
+        handle_get_lvd_data(nc,user_data);
       }
       else {
         mg_http_send_redirect(nc, 302, mg_mk_str("/"), mg_mk_str(NULL));
@@ -103,8 +104,6 @@ static void http_get_ev_handler(struct mg_connection *nc, int ev, void *ev_data,
 
 static void http_post_ev_handler(struct mg_connection *nc, int ev, void *ev_data, void *user_data) {
   struct http_message *hm = (struct http_message *) ev_data;
-
-  printf("Event: %d, uri: %s\n", ev, hm->uri.p);
 
   switch (ev) {
     case MG_EV_HTTP_REQUEST:
@@ -150,6 +149,7 @@ static void periodicCallBackHandler(void *arg) {
 	printf("Burp %i\r\n",count++);
 	mgos_gpio_toggle(GPIO_LED);
 	updateStatus(systemValues);
+  update_relay(systemValues);
 }
 
 static void buttonCallBackHandler(int pin,void *arg) {
@@ -186,7 +186,7 @@ enum mgos_app_init_result mgos_app_init(void) {
 		}
 		LOG(LL_DEBUG, ("registering end points..."));
 		mgos_register_http_endpoint("/save", http_post_ev_handler, &systemValues);
-		mgos_register_http_endpoint("/get_cpu_usage", http_get_ev_handler, &systemValues);
+		mgos_register_http_endpoint("/get_lvd_data", http_get_ev_handler, &systemValues);
     /*
 		 * Enable Button interupt
 		 */

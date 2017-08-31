@@ -1,8 +1,25 @@
 #include "lvd.h"
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#define MAX(a,b) (((a)>(b))?(a):(b))
 
 float out_cur_readings[20];
 uint8_t ocr_idx = 0;
-
+char output_buffer[256];
+/**
+ * Output readings
+ */
+void output_readings(dpt_system_t *systemValues) {
+  unsigned int watts = systemValues->out_voltage/100*systemValues->out_current;
+  sprintf(output_buffer, "B:%.4lu:P:%.4lu:O:%.4lu:A:%.4lu:R:%.1i:W:%.4u:%lf",
+							 systemValues->batt_voltage,
+							 systemValues->ps_voltage,
+							 systemValues->out_voltage,
+							 systemValues->out_current,
+							 systemValues->relayStatus,
+							 watts,
+							 systemValues->upTime/1000);
+  LOG(LL_INFO,(output_buffer));
+}
 
 void relayOn(dpt_system_t *systemValues){
 	LOG(LL_INFO,("Relay on"));
@@ -54,10 +71,11 @@ void lvdInit(struct sys_config *device_cfg,dpt_system_t *systemValues ) {
 
 }
 
-float getVoltage(voltage_sources_t selVoltage) {
+long getVoltage(voltage_sources_t selVoltage) {
 	float x;
 	float adcValue = 0.0;
-	float normalizedVoltage = 0.0;
+	float normalizedVoltage = 0;
+  long returnValue = 0;
 	/*
 	* Select Mux port to read
 	*/
@@ -76,7 +94,9 @@ float getVoltage(voltage_sources_t selVoltage) {
 	    case eOUT_VOLTAGE:
 			    x = adcValue/1023.0;        // 1024 step ADC
           x = x * 1220000.0/220000.0; // First Voltage devider 1M and 220K
-			    normalizedVoltage = x*12000.0/2000.0; // LVD Voltage Divider 10k and 2K
+			    normalizedVoltage = x*12.0/2.0; // LVD Voltage Divider 10k and 2K
+          printf("Normalized Voltage at Divider %f\n\r",normalizedVoltage);
+          returnValue = (long)(normalizedVoltage *100.0);
 	        break;
 	    case eOUT_CURRENT:
 			    //out_cur_readings[ocr_idx] = (5.0*(float)analogRead(AMP_PIN)/1024.0-2.5)*100/0.04;
@@ -91,8 +111,63 @@ float getVoltage(voltage_sources_t selVoltage) {
 						sum += out_cur_readings[i];
 					}
 					normalizedVoltage = sum/ 20.0;
+          normalizedVoltage = normalizedVoltage *1000;
+          returnValue = (long)normalizedVoltage;
 					break;
 	}
-	printf("Normalized Voltage : %f\n\r", normalizedVoltage);
-	return normalizedVoltage;
+	printf("Return Value : %li\n\r", returnValue);
+	return returnValue;
+}
+
+
+/**
+ * Update the relays:
+ *   - If output is on
+ *       - Turn it off if voltage < disconnect voltage
+ *       - Turn it off if voltage > high voltage disconnect
+ *       - Raise alarm on serial port + LED (fast blink ?)
+ *   - If output is off
+ *       - Turn it on if either PS or Battery > low voltage reconnect
+ *              ... AND either PS or Battery < high voltage reconnect
+ *       - Notify
+ */
+void update_relay(dpt_system_t *systemValues) {
+	systemValues->upTime = mgos_uptime();
+  double now = systemValues->upTime;
+  if (systemValues->relayStatus == eRELAY_ON) {
+    if ( (systemValues->out_voltage < systemValues->low_voltage_disconnect) || (systemValues->out_voltage > systemValues->high_voltage_disconnect) ) {
+      if (systemValues->volt_alarm_start == 0) {
+        LOG(LL_DEBUG, ("d:Voltage alarm conditions detected"));
+        output_readings(systemValues);
+        // We just went over the alarm threshold, get the timestamp and wait for next time
+        systemValues->volt_alarm_start = now;
+        return;
+      }
+      if ( (now - systemValues->volt_alarm_start) > systemValues->voltage_delay) {
+        relayOff(systemValues);
+        LOG(LL_DEBUG, ("d:Voltage alarm triggered after delay"));
+        systemValues->volt_alarm_start = 0;
+      }
+    } else if ((systemValues->out_voltage > systemValues->low_voltage_disconnect) && (systemValues->out_voltage < systemValues->high_voltage_disconnect)) {
+      // We are back within our operating parameters
+      if (systemValues->volt_alarm_start != 0) {
+        systemValues->volt_alarm_start = 0;
+        output_readings(systemValues);
+        LOG(LL_DEBUG, ("d:Voltage alarm resolved"));
+      }
+    }
+  } else {
+      long vmin = MIN(systemValues->batt_voltage, systemValues->ps_voltage);
+      long vmax = MAX(systemValues->batt_voltage, systemValues->ps_voltage);
+      if ( ( vmax > systemValues->low_voltage_reconnect) && ( vmin < systemValues->high_voltage_reconnect) ) {
+          LOG(LL_DEBUG, ("B:%.4lu:P:%.4lu:O:%.4lu:A:%.4lu:R:%.1i:%lf",
+					             systemValues->batt_voltage,
+											 systemValues->ps_voltage,
+											 systemValues->out_voltage,
+											 systemValues->out_current,
+											 systemValues->relayStatus,
+											 systemValues->upTime/1000));
+          relayOn(systemValues);
+      }
+  }
 }

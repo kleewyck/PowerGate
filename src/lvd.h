@@ -22,7 +22,7 @@
 
 // Define JSON formats for different data outputs
 #define STATUS_FMT "{cpu: %d, ssid: %Q, ip: %Q}"
-#define JSON_STATUS_FMT "{cpu: %d, ssid: \"%s\", ip: \"%s\", bvolt: %.2f, psvolt: %.2f, outvolt: %.2f, current: %.2f,relaysta: %d, uptime: %lf}"
+#define JSON_STATUS_FMT "{cpu: %d, ssid: \"%s\", ip: \"%s\", bvolt: %lu, psvolt: %lu, outvolt: %lu, current: %lu,relaysta: %d, uptime: %lf}"
 
 
 // Definitions
@@ -72,24 +72,25 @@ typedef enum
 // System Data Structure
 typedef struct
 {
-    uint8_t     relayCommand;
-    float       batt_voltage;
-    float       ps_voltage;
-    float       out_voltage;
-    float       out_current;
-    double      upTime;
-    uint8_t     relayStatus;
-    bool        buttonStatus;
-    uint8_t     systemState;
-    uint8_t     swVersion[2];
-    uint8_t     hwVersion[2];
-    int         low_voltage_disconnect;
-    int         low_voltage_reconnect;
-    int         high_voltage_disconnect;
-    int         high_voltage_reconnect;
-    int         high_current_disconnect;
+    uint8_t             relayCommand;
+    long       batt_voltage;
+    long       ps_voltage;
+    long       out_voltage;
+    long       out_current;
+    double              upTime;
+    uint8_t             relayStatus;
+    bool                buttonStatus;
+    uint8_t             systemState;
+    uint8_t             swVersion[2];
+    uint8_t             hwVersion[2];
+    long       low_voltage_disconnect;
+    long       low_voltage_reconnect;
+    long       high_voltage_disconnect;
+    long       high_voltage_reconnect;
+    long       high_current_disconnect;
     int         voltage_delay;
     int         current_delay;
+    double      volt_alarm_start;
     int         cpu_usage;
     char        jsonString[512];
 
@@ -100,6 +101,7 @@ typedef struct
 void relayOn(dpt_system_t *systemValues);
 void relayOff(dpt_system_t *systemValues);
 void lvdInit(struct sys_config *device_cfg,dpt_system_t *systemValues );
-float getVoltage(voltage_sources_t selVoltage);
+long getVoltage(voltage_sources_t selVoltage);
+void update_relay(dpt_system_t *systemValues);
 
 #endif

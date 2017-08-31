@@ -1,19 +1,20 @@
 $(document).ready(function() {
   // Start 1-second timer to call RESTful endpoint
+  console.log("Ready Function");
   setInterval(function() {
     $.ajax({
-      url: '/get_cpu_usage',
+      url: '/get_lvd_data',
       dataType: 'json',
       success: function(json) {
-	      //console.log(json);
+	      console.log(json);
         $('#cpu_usage').text(json.cpu + '% ');
         $('#wifi_status').text(json.status + "\r\n");
         $('#ssid_name').text(json.ssid);
         $('#ip_addr').text(json.ip);
-        $('#bvolt').text(json.bvolt);
-        $('#psvolt').text(json.psvolt);
-        $('#outvolt').text(json.outvolt);
-        $('#current').text(json.current);
+        $('#bvolt').text(json.bvolt/100.0);
+        $('#psvolt').text(json.psvolt/100.0);
+        $('#outvolt').text(json.outvolt/100.0);
+        $('#current').text(json.current/100.0);
         $('#relayStatus').text(json.relaysta);
       }
     });

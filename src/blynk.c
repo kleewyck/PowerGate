@@ -52,12 +52,12 @@ void default_blynk_handler(struct mg_connection *c, const char *cmd,
   LOG(LL_DEBUG, ("**Blynk Handler: cmd %s, Pin %d",cmd, pin));
   if (strcmp(cmd, "vr") == 0) {
     if (pin == VIRT_CURRENT_PIN) {
-      blynk_printf(c, BLYNK_HARDWARE, 0, "vw%c%d%c%.2f",0, VIRT_CURRENT_PIN, 0,systemValues->out_current);
-      blynk_printf(c, BLYNK_HARDWARE, 0, "vw%c%d%c%.2f",0, VIRT_BATT_V_PIN, 0,systemValues->batt_voltage);
-      blynk_printf(c, BLYNK_HARDWARE, 0, "vw%c%d%c%.2f",0, VIRT_PS_V_PIN, 0,systemValues->ps_voltage);
-      blynk_printf(c, BLYNK_HARDWARE, 0, "vw%c%d%c%.2f",0, VIRT_OUT_V_PIN, 0,systemValues->out_voltage);
+      blynk_printf(c, BLYNK_HARDWARE, 0, "vw%c%d%c%.2f",0, VIRT_CURRENT_PIN, 0,systemValues->out_current/100.0);
+      blynk_printf(c, BLYNK_HARDWARE, 0, "vw%c%d%c%.2f",0, VIRT_BATT_V_PIN, 0,systemValues->batt_voltage/100.0);
+      blynk_printf(c, BLYNK_HARDWARE, 0, "vw%c%d%c%.2f",0, VIRT_PS_V_PIN, 0,systemValues->ps_voltage/100.0);
+      blynk_printf(c, BLYNK_HARDWARE, 0, "vw%c%d%c%.2f",0, VIRT_OUT_V_PIN, 0,systemValues->out_voltage/100.0);
       blynk_printf(c, BLYNK_HARDWARE, 0, "vw%c%d%c%d",0, VIRT_RELAY_PIN, 0,systemValues->relayStatus);
-                  
+
     }
   } else if (strcmp(cmd, "vw") == 0) {
     if (pin == VIRT_RELAY_PIN) {
