@@ -49,10 +49,15 @@ libs:
   - origin: https://github.com/mongoose-os-libs/wifi
   - origin: https://github.com/mongoose-os-libs/http-server
   - origin: https://github.com/mongoose-os-libs/aws
+  - origin: https://github.com/mongoose-os-libs/adc
   - origin: https://github.com/mongoose-os-libs/rpc-mqtt
   - origin: https://github.com/mongoose-os-libs/rpc-service-config
   - origin: https://github.com/mongoose-os-libs/rpc-service-fs
   - origin: https://github.com/mongoose-os-libs/rpc-uart
+
+#build_vars:
+#  MGOS_ENABLE_HEAP_LOG: 1
+#  MGOS_ENABLE_CALL_TRACE: 1
 
 
 # Used by the mos tool to catch mos binaries incompatible with this file format

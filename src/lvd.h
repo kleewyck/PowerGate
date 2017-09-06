@@ -18,7 +18,7 @@
 #include "fw/src/mgos_timers.h"
 #include "fw/src/mgos_app.h"
 #include "mgos_wifi.h"
-#include "fw/src/mgos_adc.h"
+#include "mgos_adc.h"
 
 // Define JSON formats for different data outputs
 #define STATUS_FMT "{cpu: %d, ssid: %Q, ip: %Q}"

@@ -98,7 +98,7 @@ static void http_get_ev_handler(struct mg_connection *nc, int ev, void *ev_data,
   (void) user_data;
 }
 /*
- * Event Handler for http post events "/save"
+ * Event Handler for http post events "/updaterelay"
  *
  */
 
@@ -107,7 +107,7 @@ static void http_post_ev_handler(struct mg_connection *nc, int ev, void *ev_data
 
   switch (ev) {
     case MG_EV_HTTP_REQUEST:
-      if (mg_vcmp(&hm->uri, "/save") == 0) {
+      if (mg_vcmp(&hm->uri, "/updaterelay") == 0) {
         buttonCallBackHandler(GPIO_BUTTON,user_data);
       }
       break;
@@ -185,7 +185,7 @@ enum mgos_app_init_result mgos_app_init(void) {
 						LOG(LL_DEBUG, ("%s\n", msg));
 		}
 		LOG(LL_DEBUG, ("registering end points..."));
-		mgos_register_http_endpoint("/save", http_post_ev_handler, &systemValues);
+		mgos_register_http_endpoint("/updaterelay", http_post_ev_handler, &systemValues);
 		mgos_register_http_endpoint("/get_lvd_data", http_get_ev_handler, &systemValues);
     /*
 		 * Enable Button interupt
