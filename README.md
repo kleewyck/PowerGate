@@ -1,6 +1,4 @@
 # A blank Mongoose OS app
-# Enable aws shadow
-mos config-set aws.shadow.enable=true
 
 # Set wifi configuration
 mos config-set wifi.sta.enable=true wifi.ap.enable=false \
