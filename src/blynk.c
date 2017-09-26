@@ -7,16 +7,23 @@ static void *s_user_data = NULL;
 static int s_ping_interval_sec = 2;
 
 int s_reconnect_interval_ms = 3000;
-
+/***
+ * Setup Hander pointers
+ ***/
 void blynk_set_handler(blynk_handler_t func, void *user_data) {
   s_blynk_handler = func;
   s_user_data = user_data;
 }
+/***
+ * Routing to map Network Int to Internal Integer
+ ***/
 
 static uint16_t getuint16(const uint8_t *buf) {
   return buf[0] << 8 | buf[1];
 }
-
+/***
+ * Sent Packet to Blink server
+ ***/
 void blynk_send(struct mg_connection *c, uint8_t type, uint16_t id,
                 const void *data, uint16_t len) {
   static uint16_t cnt;
@@ -34,7 +41,9 @@ void blynk_send(struct mg_connection *c, uint8_t type, uint16_t id,
   mg_send(c, header, sizeof(header));
   mg_send(c, data, len);
 }
-
+/***
+ * Format String for Blynk print
+ ***/
 static void blynk_printf(struct mg_connection *c, uint8_t type, uint16_t id,
                          const char *fmt, ...) {
   char buf[100];

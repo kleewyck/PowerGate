@@ -1,12 +1,13 @@
 $(document).ready(function() {
   // Start 1-second timer to call RESTful endpoint
   console.log("Ready Function");
+  var relayValue;
   setInterval(function() {
     $.ajax({
       url: '/get_lvd_data',
       dataType: 'json',
       success: function(json) {
-	      console.log(json);
+	      //console.log(json);
         $('#cpu_usage').text(json.cpu + '% ');
         $('#wifi_status').text(json.status + "\r\n");
         $('#ssid_name').text(json.ssid);
@@ -15,16 +16,16 @@ $(document).ready(function() {
         $('#psvolt').text(json.psvolt/100.0);
         $('#outvolt').text(json.outvolt/100.0);
         $('#current').text(json.current/100.0);
-        $('#relayStatus').text(json.relaysta);
+        relayValue = json.relaysta;
       }
     });
-
-    var relayValue = parseInt($('#relayStatus').text(),10);
-    console.log(relayValue);
+    //console.log(relayValue);
       if (relayValue == 0){
-         $("#relayStatus").removeClass().addClass("lowlight");
+         $('#relayStatus').text("Off");
+         //$('#relayStatus').removeClass().addClass("lowlight");
       } else {
-        $("#relayStatus").removeClass().addClass("highlight");
+        $('#relayStatus').text("On");
+        //$('#relayStatus').removeClass().addClass("highlight");
       }
 
   }, 1000);

@@ -1,11 +1,8 @@
-# A blank Mongoose OS app
+# Mongoose OS Application to control HamRadio360 Powergate
 
 # Set wifi configuration
 mos config-set wifi.sta.enable=true wifi.ap.enable=false \
                wifi.sta.ssid=xxxxx wifi.sta.pass=xxxxxxxxx
-
-# Setup device to connect to AWS IoT
-mos aws-iot-setup --aws-iot-policy=mos-default
 
 # Attach console
 mos console

@@ -104,11 +104,15 @@ static void http_get_ev_handler(struct mg_connection *nc, int ev, void *ev_data,
 
 static void http_post_ev_handler(struct mg_connection *nc, int ev, void *ev_data, void *user_data) {
   struct http_message *hm = (struct http_message *) ev_data;
-
+  LOG(LL_INFO,("****Post Handler Entered"));
   switch (ev) {
     case MG_EV_HTTP_REQUEST:
       if (mg_vcmp(&hm->uri, "/updaterelay") == 0) {
         buttonCallBackHandler(GPIO_BUTTON,user_data);
+        /*
+         * Send a responce to repaint screen
+         */
+        mg_http_send_redirect(nc, 302, mg_mk_str("/"), mg_mk_str(NULL));
       }
       break;
     case MG_EV_SSI_CALL:
@@ -118,6 +122,7 @@ static void http_post_ev_handler(struct mg_connection *nc, int ev, void *ev_data
       break;
   }
   (void) user_data;
+  LOG(LL_INFO,("*****Post Handler exit"));
 }
 
 
