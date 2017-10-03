@@ -31,7 +31,7 @@
 #define GPIO_MUX1          12
 #define GPIO_RELAY_SET     13
 #define GPIO_RELAY_RST     15
-#define GPIO_BUTTON       2
+#define GPIO_BUTTON         2
 #define SSID_SIZE          32       // Maximum SSID size
 #define PASSWORD_SIZE      64       // Maximum password size
 

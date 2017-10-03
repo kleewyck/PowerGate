@@ -37,7 +37,7 @@ config_schema:
   - ["blynk", "o", {"title": "Blynk settings"}]
   - ["blynk.enable", "b", true, {"title": "Enable Blynk"}]
   - ["blynk.server", "s", "blynk-cloud.com:8442", {"title": "Server address"}]
-  - ["blynk.auth", "s", "811ae8e92cd441f8a03536505c94419e", {"title": "Auth token"}]
+  - ["blynk.auth", "s", "b0b4adf0887748cfa833a98cf3cec941", {"title": "Auth token"}]
 
 #  - ["my_app", "o", {title: "My app custom settings"}]
 #  - ["my_app.bool_value", "b", false, {title: "Some boolean value"}]

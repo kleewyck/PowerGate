@@ -58,7 +58,7 @@ static void blynk_printf(struct mg_connection *c, uint8_t type, uint16_t id,
 void default_blynk_handler(struct mg_connection *c, const char *cmd,
                                   int pin, int val, void *user_data) {
   dpt_system_t *systemValues = user_data;
-  LOG(LL_DEBUG, ("**Blynk Handler: cmd %s, Pin %d",cmd, pin));
+  LOG(LL_INFO, ("**Blynk Handler: cmd %s, Pin %d",cmd, pin));
   if (strcmp(cmd, "vr") == 0) {
     if (pin == VIRT_CURRENT_PIN) {
       blynk_printf(c, BLYNK_HARDWARE, 0, "vw%c%d%c%.2f",0, VIRT_CURRENT_PIN, 0,systemValues->out_current/100.0);
@@ -125,6 +125,7 @@ void handle_blynk_frame(struct mg_connection *c, void *user_data,
 }
 void ev_handler(struct mg_connection *c, int ev, void *ev_data,
                        void *user_data) {
+  dpt_system_t *systemValues = user_data;
   switch (ev) {
     case MG_EV_CONNECT:
     LOG(LL_DEBUG, ("ev_handler 1EV : %d",ev));
@@ -149,7 +150,13 @@ void ev_handler(struct mg_connection *c, int ev, void *ev_data,
       }
       break;
     case MG_EV_TIMER:
-    LOG(LL_DEBUG, ("ev_handler 3EV : %d",ev));
+      LOG(LL_DEBUG, ("ev_handler 3EV : %d",ev));
+      blynk_printf(c, BLYNK_HARDWARE, 0, "vw%c%d%c%.2f",0, VIRT_CURRENT_PIN, 0,systemValues->out_current/1000.0);
+      blynk_printf(c, BLYNK_HARDWARE, 0, "vw%c%d%c%.2f",0, VIRT_BATT_V_PIN, 0,systemValues->batt_voltage/100.0);
+      blynk_printf(c, BLYNK_HARDWARE, 0, "vw%c%d%c%.2f",0, VIRT_PS_V_PIN, 0,systemValues->ps_voltage/100.0);
+      blynk_printf(c, BLYNK_HARDWARE, 0, "vw%c%d%c%.2f",0, VIRT_OUT_V_PIN, 0,systemValues->out_voltage/100.0);
+      blynk_printf(c, BLYNK_HARDWARE, 0, "vw%c%d%c%d",0, VIRT_RELAY_PIN, 0,systemValues->relayStatus);
+
       blynk_send(c, BLYNK_PING, 0, NULL, 0);
 
       break;

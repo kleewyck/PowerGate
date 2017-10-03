@@ -105,7 +105,7 @@ static void http_post_ev_handler(struct mg_connection *nc, int ev, void *ev_data
         /*
          * Send a responce to repaint screen
          */
-        mg_http_send_redirect(nc, 302, mg_mk_str("/"), mg_mk_str(NULL));
+        //mg_http_send_redirect(nc, 302, mg_mk_str("/"), mg_mk_str(NULL));
       }
       break;
     case MG_EV_SSI_CALL:
@@ -149,7 +149,7 @@ static void periodicCallBackHandler(void *arg) {
 	printf("Burp %i\r\n",count++);
 	mgos_gpio_toggle(GPIO_LED);      /* Blink Status Light*/
 	updateStatus(systemValues);      /* Call the Main Data collection routine */
-  update_relay(systemValues);      /* Update relay based on current status  */
+  //update_relay(systemValues);      /* Update relay based on current status  */
 }
 /*
  * Call back handeler for when the button pressed on the Board
@@ -204,8 +204,8 @@ enum mgos_app_init_result mgos_app_init(void) {
 		 * Enable Button interupt. Not This specific function handles
      * Contact bounce.
 		 */
-		 mgos_gpio_set_button_handler(GPIO_BUTTON, MGOS_GPIO_PULL_NONE,
-                                  MGOS_GPIO_INT_EDGE_POS,
+		 mgos_gpio_set_button_handler(GPIO_BUTTON, MGOS_GPIO_PULL_UP,
+                                  MGOS_GPIO_INT_EDGE_NEG,
                                   50, buttonCallBackHandler,
                                   &systemValues);
 

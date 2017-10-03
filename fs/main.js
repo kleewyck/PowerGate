@@ -15,7 +15,7 @@ $(document).ready(function() {
         $('#bvolt').text(json.bvolt/100.0);
         $('#psvolt').text(json.psvolt/100.0);
         $('#outvolt').text(json.outvolt/100.0);
-        $('#current').text(json.current/100.0);
+        $('#current').text(json.current/1000.0);
         relayValue = json.relaysta;
       }
     });

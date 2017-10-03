@@ -102,8 +102,9 @@ long getVoltage(voltage_sources_t selVoltage) {
 			    //out_cur_readings[ocr_idx] = (5.0*(float)analogRead(AMP_PIN)/1024.0-2.5)*100/0.04;
 					//out_cur_readings[ocr_idx] = (1.0*adcValue/1023.0-0.454)*100.0/0.04;
 			    //out_cur_readings[ocr_idx] = ((adcValue/1023.0)-0.440)*100.0/0.008;
-					// See http://forum.arduino.cc/index.php?topic=133144.0 for help
-					out_cur_readings[ocr_idx] = (adcValue-461.0) * 1/(0.008 *1024.0);
+					out_cur_readings[ocr_idx] = (adcValue-462.0) * 1/(0.008 *1024.0);
+          if (out_cur_readings[ocr_idx] < 0 )
+            out_cur_readings[ocr_idx] = 0;
           printf("ADC Value: %f, Current: %f\r\n",adcValue, out_cur_readings[ocr_idx]);
 					ocr_idx = ((ocr_idx+1) % 20);
 					float sum = 0.0;
